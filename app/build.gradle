@@ -67,7 +67,6 @@ android {
             signingConfig = signingConfigs.release.storeFile ? signingConfigs.release : null
         }
         debug {
-            applicationIdSuffix ".debug"
             gradle.buildFinished {
                 buildResult -> if (buildResult.failure) {
                     logger.lifecycle("BUILD FAILED")

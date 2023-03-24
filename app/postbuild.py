@@ -145,4 +145,4 @@ if not enable_push_to_device or not os.path.isfile(enable_push_to_device):
     # print('[INFO] push-to-device after build is DISABLED. To enable it, run \'echo . > ' + enable_push_to_device + '\'')
     sys.exit(0)
 
-pushAPKtoDevice("com.github.catfriend1.syncthingandroid.debug", debug_apk)
+pushAPKtoDevice("com.github.catfriend1.syncthingandroid", debug_apk)
