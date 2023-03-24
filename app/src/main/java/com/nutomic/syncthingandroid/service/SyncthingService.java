@@ -802,7 +802,7 @@ public class SyncthingService extends Service {
         });
     }
 
-    public State getCurrentState() {
+    public final State getCurrentState() {
         return mCurrentState;
     }
 
