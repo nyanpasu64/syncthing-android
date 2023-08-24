@@ -425,9 +425,12 @@ public class SyncthingService extends Service {
      * {@link #onServiceStateChange} is called while applying the decision change.
      */
     private void onShouldRunDecisionChanged(boolean newShouldRunDecision) {
+        Log.w("scoped-log", "{ onShouldRunDecisionChanged(" + newShouldRunDecision + ")");
         if (newShouldRunDecision != mLastDeterminedShouldRun) {
             Log.i(TAG, "shouldRun decision changed to " + newShouldRunDecision + " according to configured run conditions.");
             mLastDeterminedShouldRun = newShouldRunDecision;
+
+            Log.w("scoped-log", "mCurrentState = " + mCurrentState + ", newShouldRunDecision = " + newShouldRunDecision);
 
             // React to the shouldRun condition change.
             if (newShouldRunDecision) {
@@ -451,7 +454,10 @@ public class SyncthingService extends Service {
                 }
                 shutdown(State.DISABLED);
             }
+
+            Log.w("scoped-log", "mCurrentState := " + mCurrentState);
         }
+        Log.w("scoped-log", "} onShouldRunDecisionChanged");
     }
 
     /**
@@ -545,6 +551,7 @@ public class SyncthingService extends Service {
      * Prepares to launch the syncthing binary.
      */
     private void launchStartupTask(SyncthingRunnable.Command srCommand) {
+        Log.w("scoped-log", "{ launchStartupTask");
         synchronized (mStateLock) {
             if (mCurrentState != State.DISABLED && mCurrentState != State.INIT) {
                 Log.e(TAG, "launchStartupTask: Wrong state " + mCurrentState + " detected. Cancelling.");
@@ -623,6 +630,7 @@ public class SyncthingService extends Service {
             }
             );
         }
+        Log.w("scoped-log", "} launchStartupTask");
     }
 
     /**
@@ -687,6 +695,7 @@ public class SyncthingService extends Service {
      * Performs a synchronous shutdown of the native binary.
      */
     private void shutdown(State newState) {
+        Log.w("scoped-log", "{ shutdown");
         if (mCurrentState == State.STARTING) {
             Log.w(TAG, "Deferring shutdown until State.STARTING was left");
             mHandler.postDelayed(() -> {
@@ -734,6 +743,7 @@ public class SyncthingService extends Service {
             }
             mSyncthingRunnable = null;
         }
+        Log.w("scoped-log", "} shutdown");
     }
 
     public @Nullable
