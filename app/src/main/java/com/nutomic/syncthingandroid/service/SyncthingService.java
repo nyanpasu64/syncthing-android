@@ -695,15 +695,24 @@ public class SyncthingService extends Service {
      * Performs a synchronous shutdown of the native binary.
      */
     private void shutdown(State newState) {
-        Log.w("scoped-log", "{ shutdown");
+        shutdownImpl(newState, false);
+    }
+    private void shutdownImpl(State newState, boolean deferred) {
+        if (deferred && mLastDeterminedShouldRun) {
+            Log.w("scoped-log", "{} shutdown: Cancelling deferred shutdown because mLastDeterminedShouldRun is restarting.");
+            // TODO will this miss config changes?
+            return;
+        }
+
         if (mCurrentState == State.STARTING) {
-            Log.w(TAG, "Deferring shutdown until State.STARTING was left");
+            Log.w("scoped-log", "{} shutdown: Deferring until State.STARTING was left");
             mHandler.postDelayed(() -> {
-                shutdown(newState);
+                shutdownImpl(newState, true);
             }, 1000);
             return;
         }
 
+        Log.w("scoped-log", "{ shutdown");
         synchronized (mStateLock) {
             onServiceStateChange(newState);
         }
